@@ -1,0 +1,2 @@
+#!/bin/bash
+target/broadcast-in-dist/bin/start com.x.pubsub.PublisherKernel

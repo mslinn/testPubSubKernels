@@ -1,0 +1,25 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Main" type="Application" factoryName="Application">
+    <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+    <option name="MAIN_CLASS_NAME" value="akka.kernel.Main" />
+    <option name="VM_PARAMETERS" value="-Djava.library.path=/usr/local/lib" />
+    <option name="PROGRAM_PARAMETERS" value="com.x.pubsub.TestSubscriberKernel" />
+    <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+    <option name="ALTERNATIVE_JRE_PATH" value="" />
+    <option name="ENABLE_SWING_INSPECTOR" value="false" />
+    <option name="ENV_VARIABLES" />
+    <option name="PASS_PARENT_ENVS" value="true" />
+    <module name="Pubsub test subscriber kernel" />
+    <envs />
+    <RunnerSettings RunnerId="Debug">
+      <option name="DEBUG_PORT" value="" />
+      <option name="TRANSPORT" value="0" />
+      <option name="LOCAL" value="true" />
+    </RunnerSettings>
+    <ConfigurationWrapper RunnerId="Debug" />
+    <method>
+      <option name="SBT.BeforeRunTask" enabled="true" action="products" runInCurrentModule="false" />
+    </method>
+  </configuration>
+</component>
