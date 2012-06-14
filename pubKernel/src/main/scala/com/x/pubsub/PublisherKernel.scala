@@ -19,8 +19,9 @@ class PublisherKernel extends Bootable {
                   | akka.actor.debug.receive = on
                   | akka.actor.remote.log-received-messages = on
                   | akka.actor.remote.log-sent-messages = on
-                  | akka.remote.netty.hostname = "%s"
-                  | akka.remote.netty.port = 2000
+                  | akka.event-handlers = ["akka.event.slf4j.Slf4jEventHandler"]
+                  | #akka.remote.netty.hostname = "%s"
+                  | #akka.remote.netty.port = 2000
                   | """.stripMargin.format(publisherIpAddr)
 
   val myConfig = ConfigFactory.parseString(strConf)
@@ -48,9 +49,9 @@ class TestPublisher extends Actor with ActorLogging {
 
   def receive: Receive = {
      case msg =>
+       //log.debug("TestPublisher about to send ZMQ and Akka messages")
        val heapPayload = ser.serialize("This is a ZeroMQ message").fold(throw _, identity)
-       log.debug("TestPublisher about to send ZMQ and Akka messages")
-       pubSocket ! ZMQMessage(Seq(Frame("PublisherLifecycle"), Frame(heapPayload)))
+       pubSocket ! ZMQMessage(Seq(Frame("PublisherLifecycle"), Frame("This is a ZeroMQ message")))
        try {
          testSubscriber ! "This is an Akka message"
        } catch {

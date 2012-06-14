@@ -7,6 +7,7 @@ import akka.zeromq._
 import com.typesafe.config.ConfigFactory
 import java.net.InetAddress
 import Resolver._
+import akka.remote.RemoteScope
 
 class TestSubscriberKernel extends Bootable {
   val actorSystemName = "default"
@@ -17,6 +18,7 @@ class TestSubscriberKernel extends Bootable {
                   | akka.actor.debug.receive = on
                   | akka.actor.remote.log-received-messages = on
                   | akka.actor.remote.log-sent-messages = on
+                  | akka.event-handlers = ["akka.event.slf4j.Slf4jEventHandler"]
                   | akka.remote.netty.hostname = "%s"
                   | akka.remote.netty.port = 1994
                   | """.stripMargin.format(subscriberIpAddr)
@@ -27,7 +29,11 @@ class TestSubscriberKernel extends Bootable {
   val complete = ConfigFactory.load(combined)
   val system = ActorSystem(actorSystemName, complete)
 
-  def startup = system.actorOf(Props[TestSubscriber], "TestSubscriber")
+  def startup = {
+    system.actorOf(Props[TestSubscriber], "TestSubscriber")
+    //system.actorOf(Props[TestSubscriber].withDeploy(Deploy(scope = RemoteScope(AddressFromURIString("akka://default@127.0.0.1:1994")))),
+    //               "TestSubscriber")
+  }
 
   def shutdown = system.shutdown()
 }
