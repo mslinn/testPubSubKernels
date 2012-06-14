@@ -45,7 +45,7 @@ object Resolver {
 
 class TestSubscriber extends Actor with ActorLogging {
   val ser = SerializationExtension(context.system)
-  context.system.newSocket(SocketType.Sub, Listener(self), Connect("tcp://%s:2012".format(publisherIpAddr)), Subscribe("PublisherLifecycle"))
+  val zmqActorRef = context.system.newSocket(SocketType.Sub, Listener(self), Connect("tcp://%s:2012".format(publisherIpAddr)), Subscribe(""))
 
   def receive: Receive = {
      case msg =>
