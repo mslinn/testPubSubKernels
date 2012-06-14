@@ -5,6 +5,8 @@ import akka.actor._
 import akka.serialization.SerializationExtension
 import akka.zeromq._
 import com.typesafe.config.ConfigFactory
+import java.net.InetAddress
+import Resolver._
 
 class TestSubscriberKernel extends Bootable {
   val actorSystemName = "default"
@@ -15,9 +17,9 @@ class TestSubscriberKernel extends Bootable {
                   | akka.actor.debug.receive = on
                   | akka.actor.remote.log-received-messages = on
                   | akka.actor.remote.log-sent-messages = on
-                  | akka.remote.netty.hostname = bookviewgeneratoractor
+                  | akka.remote.netty.hostname = "%s"
                   | akka.remote.netty.port = 1994
-                  | """.stripMargin
+                  | """.stripMargin.format(subscriberIpAddr)
 
   val myConfig = ConfigFactory.parseString(strConf)
   val regularConfig = ConfigFactory.load()
@@ -30,12 +32,17 @@ class TestSubscriberKernel extends Bootable {
   def shutdown = system.shutdown()
 }
 
+object Resolver {
+  val subscriberIpAddr = InetAddress.getByName("bookviewgeneratoractor").getHostAddress
+  val publisherIpAddr = InetAddress.getByName("pubsubbroadcast").getHostAddress
+}
+
 class TestSubscriber extends Actor with ActorLogging {
   val ser = SerializationExtension(context.system)
-  context.system.newSocket(SocketType.Sub, Listener(self), Connect("tcp://pubsubbroadcast:2012"), Subscribe("PublisherLifecycle"))
+  context.system.newSocket(SocketType.Sub, Listener(self), Connect("tcp://%s:2012".format(publisherIpAddr)), Subscribe("PublisherLifecycle"))
 
   def receive: Receive = {
      case msg =>
-       log.debug("TestSubscriber got " + msg + " [" + msg.getClass.getName + "]: " + msg)
+       log.debug("TestSubscriber got '" + msg + "' [" + msg.getClass.getName + "]")
   }
 }
