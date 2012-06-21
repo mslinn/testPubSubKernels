@@ -18,7 +18,8 @@ class TestPublisher extends Actor with ActorLogging {
 
   def receive: Receive = {
      case msg =>
-       log.debug("TestPublisher about to send ZeroMQ message")
+       //log.debug("TestPublisher about to send ZeroMQ message")
+       print(".")
        val payload = ser.serialize("This is a ZeroMQ message").fold(throw _, identity)
        pubSocket ! ZMQMessage(Seq(Frame("PublisherLifecycle"), Frame(payload)))
   }
