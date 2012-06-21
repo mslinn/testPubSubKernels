@@ -3,18 +3,18 @@ import Keys._
 import akka.sbt.AkkaKernelPlugin
 import akka.sbt.AkkaKernelPlugin.{Dist, outputDirectory, distJvmOptions}
 
-object BroadcastInBuild extends Build {
+object PublisherBuild extends Build {
   val Organization = "com.x"
   val Version = "0.0.2"
-  val ScalaVersion = "2.9.1"
+  val ScalaVersion = "2.9.2"
 
-  lazy val BroadcastInKernel = Project(
-    id = "pubsub publisher kernel",
+  lazy val BroadcastKernel = Project(
+    id = "Minimal publisher kernel",
     base = file("."),
     settings = defaultSettings ++ AkkaKernelPlugin.distSettings ++ Seq(
-      libraryDependencies ++= Dependencies.broadcastInKernel,
+      libraryDependencies ++= Dependencies.publisherKernel,
       distJvmOptions in Dist := "-Xms256M -Xmx1024M -Djava.library.path=/usr/local/lib",
-      outputDirectory in Dist := file("target/broadcast-in-dist")
+      outputDirectory in Dist := file("target/publisher-dist")
     )
   )
 
@@ -34,7 +34,8 @@ object BroadcastInBuild extends Build {
   )
   lazy val defaultSettings = buildSettings ++ Seq(
     resolvers ++= Seq(
-      "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/"),
+      "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/"
+    ),
 
     // compile options
     scalacOptions ++= Seq("-encoding", "UTF-8", "-deprecation", "-unchecked"),
@@ -43,25 +44,23 @@ object BroadcastInBuild extends Build {
 }
 
 object Dependencies {
-
   import Dependency._
 
-  val broadcastInKernel = Seq(
-    akkaKernel, akkaRemote, akkaSlf4j, logback, zmq, zmqAkka
+  val publisherKernel = Seq(
+    akkaActor, akkaKernel, akkaRemote, akkaSlf4j, akkaZMQ, logback, zeroMQ
   )
 }
 
 object Dependency {
   object V {
-    val Akka = "2.0.1"
+    val Akka = "2.0.2"
   }
 
-  val akkaKernel = "com.typesafe.akka"  % "akka-kernel"                % V.Akka
-  val akkaRemote = "com.typesafe.akka" %  "akka-remote"                % V.Akka
-  val akkaSlf4j  = "com.typesafe.akka"  % "akka-slf4j"                 % V.Akka
-  val logback    = "ch.qos.logback"     % "logback-classic"            % "1.0.0"
-  val zmq        = "org.zeromq"         % "zeromq-scala-binding_2.9.1" % "0.0.5"
-  val zmqAkka    = "com.typesafe.akka"  % "akka-zeromq"                % V.Akka
+  val akkaActor  = "com.typesafe.akka"  % "akka-actor"                 % V.Akka  withSources()
+  val akkaKernel = "com.typesafe.akka"  % "akka-kernel"                % V.Akka  withSources()
+  val akkaRemote = "com.typesafe.akka" %  "akka-remote"                % V.Akka  withSources()
+  val akkaSlf4j  = "com.typesafe.akka"  % "akka-slf4j"                 % V.Akka  withSources()
+  val akkaZMQ    = "com.typesafe.akka"  % "akka-zeromq"                % "latest.integration"  withSources()
+  val logback    = "ch.qos.logback"     % "logback-classic"            % "1.0.0" withSources()
+  val zeroMQ     = "org.zeromq"         % "zeromq-scala-binding_2.9.1" % "0.0.6" withSources()
 }
-
-

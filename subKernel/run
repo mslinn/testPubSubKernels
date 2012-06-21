@@ -1,2 +1,2 @@
 #!/bin/bash
-target/test-subscriber-dist/bin/start com.x.pubsub.TestSubscriberKernel
+target/subscriber-dist/bin/start com.x.pubsub.SubscriberKernel

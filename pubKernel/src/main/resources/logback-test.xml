@@ -9,9 +9,9 @@
     </encoder>
   </appender>
 
-  <logger name="com.x.pubsub" level="DEBUG" />
+  <logger name="com.bookish.pubsub" level="DEBUG" />
   <logger name="ch.qos.logback.classic" level="WARNING" />
-  <logger name="akka.zeromq" level="DEBUG" />
+  <logger name="akka.zeromq" level="INFO" />
 
   <root level="DEBUG">
     <appender-ref ref="STDOUT" />

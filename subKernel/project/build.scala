@@ -3,24 +3,24 @@ import Keys._
 import akka.sbt.AkkaKernelPlugin
 import akka.sbt.AkkaKernelPlugin.{Dist, outputDirectory, distJvmOptions}
 
-object TestSubscriberBuild extends Build {
+object SubscriberBuild extends Build {
   val Organization = "com.x"
-  val Version = "2.0.1"
-  val ScalaVersion = "2.9.1"
+  val Version = "0.0.2"
+  val ScalaVersion = "2.9.2"
 
-  lazy val TestSubscriberKernel = Project(
-    id = "Pubsub test subscriber kernel",
+  lazy val SubscriberKernel = Project(
+    id = "Minimal subscriber kernel",
     base = file("."),
     settings = defaultSettings ++ AkkaKernelPlugin.distSettings ++ Seq(
-      libraryDependencies ++= Dependencies.testSubscriberKernel,
+      libraryDependencies ++= Dependencies.subscriberKernel,
       distJvmOptions in Dist := "-Xms256M -Xmx1024M -Djava.library.path=/usr/local/lib",
-      outputDirectory in Dist := file("target/test-subscriber-dist")
+      outputDirectory in Dist := file("target/subscriber-dist")
     )
   )
 
   val IvyXML =
     <dependencies>
-      <exclude org="org.slf4j" module="slf4j-jdk14"/>
+        <exclude org="org.slf4j" module="slf4j-jdk14"/>
     </dependencies>
 
   lazy val buildSettings = Defaults.defaultSettings ++ Seq(
@@ -34,32 +34,34 @@ object TestSubscriberBuild extends Build {
   )
   lazy val defaultSettings = buildSettings ++ Seq(
     resolvers ++= Seq(
-      "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/"),
+      "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/"
+    ),
 
     // compile options
     scalacOptions ++= Seq("-encoding", "UTF-8", "-deprecation", "-unchecked"),
-    javacOptions  ++= Seq("-Xlint:unchecked", "-Xlint:deprecation")
+    javacOptions ++= Seq("-Xlint:unchecked", "-Xlint:deprecation")
   )
 }
 
 object Dependencies {
-
   import Dependency._
 
-  val testSubscriberKernel = Seq(
-    akkaKernel, akkaRemote, akkaSlf4j, logback, zmqAkka, zmq
+  val subscriberKernel = Seq(
+    akkaActor, akkaKernel, akkaRemote, akkaSlf4j, akkaZMQ, logback, zeroMQ
   )
 }
 
 object Dependency {
+
   object V {
-    val Akka = "2.0.1"
+    val Akka = "2.0.2"
   }
 
-  val akkaKernel = "com.typesafe.akka"  % "akka-kernel"                % V.Akka
-  val akkaRemote = "com.typesafe.akka" %  "akka-remote"                % V.Akka
-  val akkaSlf4j  = "com.typesafe.akka"  % "akka-slf4j"                 % V.Akka
-  val logback    = "ch.qos.logback"     % "logback-classic"            % "1.0.0"
-  val zmq        = "org.zeromq"         % "zeromq-scala-binding_2.9.1" % "0.0.5"
-  val zmqAkka    = "com.typesafe.akka"  % "akka-zeromq"                % V.Akka
+  val akkaActor  = "com.typesafe.akka" % "akka-actor"                 % V.Akka withSources()
+  val akkaKernel = "com.typesafe.akka" % "akka-kernel"                % V.Akka withSources()
+  val akkaRemote = "com.typesafe.akka" % "akka-remote"                % V.Akka withSources()
+  val akkaSlf4j  = "com.typesafe.akka" % "akka-slf4j"                 % V.Akka withSources()
+  val akkaZMQ    = "com.typesafe.akka" % "akka-zeromq"                % "latest.integration" withSources()
+  val logback    = "ch.qos.logback"    % "logback-classic"            % "1.0.0" withSources()
+  val zeroMQ     = "org.zeromq"        % "zeromq-scala-binding_2.9.1" % "0.0.6" withSources()
 }
