@@ -34,9 +34,9 @@ class PublisherKernel extends Bootable {
                   | akka.actor.remote.log-received-messages = on
                   | akka.actor.remote.log-sent-messages = on
                   | akka.event-handlers = ["akka.event.slf4j.Slf4jEventHandler"]
-                  | akka.remote.netty.hostname = "%s"
-                  | akka.remote.netty.port = 2000
-                  | """.stripMargin.format(publisherIpAddr)
+                  | #akka.remote.netty.hostname = "%s"
+                  | #akka.remote.netty.port = 2000
+                  | """.stripMargin//.format(publisherIpAddr)
 
   val myConfig = ConfigFactory.parseString(strConf)
   val regularConfig = ConfigFactory.load()
