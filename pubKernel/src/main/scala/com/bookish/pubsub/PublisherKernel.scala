@@ -1,4 +1,4 @@
-package com.bookish.pubsub
+package com.x.pubsub
 
 import akka.serialization.SerializationExtension
 import akka.zeromq.zeromqSystem
@@ -7,13 +7,12 @@ import com.typesafe.config.ConfigFactory
 import akka.actor._
 import akka.zeromq.{Frame, ZMQMessage, Bind, SocketType}
 import akka.util.duration._
-import java.net.InetAddress
-import Resolver._
+//import java.net.InetAddress
+//import Resolver._
 
 class TestPublisher extends Actor with ActorLogging {
   val ser = SerializationExtension(context.system)
   val pubSocket = context.system.newSocket(SocketType.Pub, Bind("tcp://127.0.0.1:1235"))
-  //val testSubscriber = context.system.actorFor("akka://default@127.0.0.1:1994/user/TestSubscriber")
 
   context.system.scheduler.schedule(1000.millis, 1000.millis, self, "Tick")
 
@@ -45,15 +44,15 @@ class PublisherKernel extends Bootable {
   val complete = ConfigFactory.load(combined)
   val system = ActorSystem(actorSystemName, complete)
 
-  println("publisherIpAddr=" + publisherIpAddr)
-  println("subscriberIpAddr=" + subscriberIpAddr)
+//  println("publisherIpAddr=" + publisherIpAddr)
+//  println("subscriberIpAddr=" + subscriberIpAddr)
 
   def startup = system.actorOf(Props[TestPublisher], name = "publisher")
 
   def shutdown = system.shutdown()
 }
 
-object Resolver {
-  val subscriberIpAddr = InetAddress.getByName("subscriber").getHostAddress
-  val publisherIpAddr = InetAddress.getByName("publisher").getHostAddress
-}
+//object Resolver {
+//  val subscriberIpAddr = InetAddress.getByName("subscriber").getHostAddress
+//  val publisherIpAddr = InetAddress.getByName("publisher").getHostAddress
+//}

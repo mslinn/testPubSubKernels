@@ -1,2 +1,2 @@
 #!/bin/bash
-target/publisher-dist/bin/start com.bookish.pubsub.PublisherKernel
+target/publisher-dist/bin/start com.x.pubsub.PublisherKernel
